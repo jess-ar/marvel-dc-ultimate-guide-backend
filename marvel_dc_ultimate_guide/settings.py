@@ -16,19 +16,12 @@ import os
 from dotenv import load_dotenv
 import requests
 from datetime import timedelta
+import dj_database_url
 
 
 API_KEY = config('SUPERHERO_API_KEY')
 BASE_URL = f'https://superheroapi.com/api/{API_KEY}'
 
-"""# Busca personajes cuyo nombre contenga 'man'
-response = requests.get(f'{BASE_URL}/search/man')
-
-if response.status_code == 200:
-    data = response.json()
-    print(data)  # Verás los personajes relacionados con 'man'
-else:
-    print(f'Error: {response.status_code}')"""
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,7 +32,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
+
 
 ALLOWED_HOSTS = []
 
@@ -107,16 +101,23 @@ WSGI_APPLICATION = 'marvel_dc_ultimate_guide.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
-        'HOST': config('DB_HOST'),
-        'PORT': config('DB_PORT'),
+DATABASE_URL = os.environ.get('DATABASE_URL')
+
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.parse(DATABASE_URL)
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': config('DB_NAME'),
+            'USER': config('DB_USER'),
+            'PASSWORD': config('DB_PASSWORD'),
+            'HOST': config('DB_HOST'),
+            'PORT': config('DB_PORT'),
+        }
+    }
 
 SECRET_KEY = config('SECRET_KEY')
 
