@@ -17,6 +17,8 @@ from dotenv import load_dotenv
 import requests
 from datetime import timedelta
 import dj_database_url
+print("🔥 DATABASE_URL:", os.getenv("DATABASE_URL"))
+
 
 
 API_KEY = config('SUPERHERO_API_KEY')
@@ -105,14 +107,7 @@ DATABASE_URL = config('DATABASE_URL', default='postgres://user:pass@localhost/db
 
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
-        'HOST': config('DB_HOST'),
-        'PORT': config('DB_PORT'),
-    }
+    'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
 }
 
 SECRET_KEY = config('SECRET_KEY')
