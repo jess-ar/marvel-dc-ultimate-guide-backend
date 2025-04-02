@@ -35,8 +35,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost').split(' ')
-
 AUTH_USER_MODEL = 'users.CustomUser'
 
 AUTHENTICATION_BACKENDS = [
@@ -105,15 +103,9 @@ DATABASE_URL = config('DATABASE_URL', default='postgres://user:pass@localhost/db
 
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
-        'HOST': config('DB_HOST'),
-        'PORT': config('DB_PORT'),
-    }
+    'default': dj_database_url.config(conn_max_age=600)
 }
+
 
 SECRET_KEY = config('SECRET_KEY')
 
@@ -178,10 +170,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # Directories where Django will look for static files in development
-STATICFILES_DIRS = [BASE_DIR / 'static']  # development
+#STATICFILES_DIRS = [BASE_DIR / 'static']  # development
 
 # Directory where all static files will be collected in production
-#STATIC_ROOT = BASE_DIR / 'staticfiles'  # production
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -189,26 +181,33 @@ STATICFILES_DIRS = [BASE_DIR / 'static']  # development
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ALLOWED_HOSTS = [
-    'api.marvel-and-dc-ultimate-guide.com',
-    'marvel-dc-ultimate-guide-backend.onrender.com',
-    'localhost',
-    '127.0.0.1',
+'api.marvel-and-dc-ultimate-guide.com',
+'marvel-dc-ultimate-guide-backend.onrender.com',
+'marvel-dc-ultimate-guide-backend.fly.dev',
+'localhost',
+'127.0.0.1',
 ]
 
 CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
     'http://localhost:5173',
     'http://127.0.0.1:5173',
+    "https://www.marvel-and-dc-ultimate-guide.com",
 ]
 
 
 CORS_ALLOW_HEADERS = [
     'content-type',
-    'authorization',  # Permitir el encabezado Authorization
+    'authorization',
     'x-requested-with',
     'accept',
     'origin',
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://marvel-dc-ultimate-guide-backend.fly.dev',
+    "https://www.marvel-and-dc-ultimate-guide.com",
+]
 
 CORS_ALLOW_CREDENTIALS = True
 
