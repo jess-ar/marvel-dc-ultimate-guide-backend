@@ -35,8 +35,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost').split(' ')
-
 AUTH_USER_MODEL = 'users.CustomUser'
 
 AUTHENTICATION_BACKENDS = [
@@ -208,6 +206,7 @@ CORS_ALLOW_HEADERS = [
 
 CSRF_TRUSTED_ORIGINS = [
     'https://marvel-dc-ultimate-guide-backend.fly.dev',
+    "https://www.marvel-and-dc-ultimate-guide.com",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
