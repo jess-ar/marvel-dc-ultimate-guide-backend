@@ -17,8 +17,6 @@ from dotenv import load_dotenv
 import requests
 from datetime import timedelta
 import dj_database_url
-print("🔥 DATABASE_URL:", os.getenv("DATABASE_URL"))
-
 
 
 API_KEY = config('SUPERHERO_API_KEY')
@@ -107,8 +105,9 @@ DATABASE_URL = config('DATABASE_URL', default='postgres://user:pass@localhost/db
 
 
 DATABASES = {
-    'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
+    'default': dj_database_url.config(conn_max_age=600)
 }
+
 
 SECRET_KEY = config('SECRET_KEY')
 
@@ -173,10 +172,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # Directories where Django will look for static files in development
-STATICFILES_DIRS = [BASE_DIR / 'static']  # development
+#STATICFILES_DIRS = [BASE_DIR / 'static']  # development
 
 # Directory where all static files will be collected in production
-#STATIC_ROOT = BASE_DIR / 'staticfiles'  # production
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -184,26 +183,32 @@ STATICFILES_DIRS = [BASE_DIR / 'static']  # development
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ALLOWED_HOSTS = [
-    'api.marvel-and-dc-ultimate-guide.com',
-    'marvel-dc-ultimate-guide-backend.onrender.com',
-    'localhost',
-    '127.0.0.1',
+'api.marvel-and-dc-ultimate-guide.com',
+'marvel-dc-ultimate-guide-backend.onrender.com',
+'marvel-dc-ultimate-guide-backend.fly.dev',
+'localhost',
+'127.0.0.1',
 ]
 
 CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
     'http://localhost:5173',
     'http://127.0.0.1:5173',
+    "https://www.marvel-and-dc-ultimate-guide.com",
 ]
 
 
 CORS_ALLOW_HEADERS = [
     'content-type',
-    'authorization',  # Permitir el encabezado Authorization
+    'authorization',
     'x-requested-with',
     'accept',
     'origin',
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://marvel-dc-ultimate-guide-backend.fly.dev',
+]
 
 CORS_ALLOW_CREDENTIALS = True
 

@@ -1,14 +1,30 @@
-# Usa una imagen base de Python
-FROM python:3.9-slim
+ARG PYTHON_VERSION=3.12-slim
 
-# Establece el directorio de trabajo dentro del contenedor
-WORKDIR /app
+FROM python:${PYTHON_VERSION}
 
-# Copia el archivo de dependencias y el código fuente
-COPY requirements.txt requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-COPY . .
+# install psycopg2 dependencies.
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
 
-# Especifica el comando para iniciar tu aplicación
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "marvel_dc_ultimate_guide.wsgi:application"]
+RUN mkdir -p /code
+
+WORKDIR /code
+
+COPY requirements.txt /tmp/requirements.txt
+RUN set -ex && \
+    pip install --upgrade pip && \
+    pip install -r /tmp/requirements.txt && \
+    rm -rf /root/.cache/
+COPY . /code
+
+ENV SECRET_KEY "M0KXGOZP4nlIyKmQL9EJ4cJDaWQQlSPAKSgpeFDRz47So6GpMP"
+RUN python manage.py collectstatic --noinput
+
+EXPOSE 8000
+
+CMD ["gunicorn","--bind",":8000","--workers","2","marvel_dc_ultimate_guide.wsgi"]
