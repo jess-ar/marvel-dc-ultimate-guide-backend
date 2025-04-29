@@ -9,6 +9,7 @@ from rest_framework.pagination import PageNumberPagination
 
 class CharacterSearchView(generics.ListAPIView):
     serializer_class = CharacterSerializer
+    authentication_classes = []
     permission_classes = [AllowAny]
 
     def get_queryset(self):
