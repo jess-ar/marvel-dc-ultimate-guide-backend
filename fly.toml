@@ -7,6 +7,9 @@ app = 'marvel-dc-ultimate-guide-backend'
 primary_region = 'mad'
 console_command = '/code/manage.py shell'
 
+[processes]
+  app = "gunicorn marvel_dc_ultimate_guide.wsgi:application --bind 0.0.0.0:$PORT"
+
 [build]
 
 [deploy]
